@@ -1,12 +1,12 @@
 ---
-- name: Install LEMP with PHP 7.0
+- name: Install PHP 7.0 and httpd
   yum:
     name: "{{ item }}"
     state: present
   with_items:
     - httpd
     - mod_ssl
-    - mysql
+#    - mysql
     - php70w
     - php70w-mcrypt
     - php70w-tidy
