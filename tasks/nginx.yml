@@ -1,7 +1,14 @@
 ---
+- name: Install epel
+  yum:
+    name: epel-release
+    state: present
+  notify:
+    - restart nginx
+
 - name: Install nginx
   yum:
-    name: nginx16
+    name: nginx-1.12.2
     state: present
   notify:
     - restart nginx
