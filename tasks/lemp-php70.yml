@@ -1,29 +1,30 @@
 ---
-- name: Install PHP 7.0 and httpd
+- name: Install epel, yum utils and remi repo for php
+  yum:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - epel-release
+    - yum-utils
+    - http://rpms.remirepo.net/enterprise/remi-release-7.rpm
+
+- name: Install PHP 7.2 and httpd
   yum:
     name: "{{ item }}"
     state: present
   with_items:
     - httpd
     - mod_ssl
-#    - mysql
-    - php70w
-    - php70w-mcrypt
-    - php70w-tidy
-    - php70w-mysql
-    - php70w-gd
-    - php70w-imap
-    - php70w-mbstring
-    - php70w-odbc
-    - php70w-pear
-    - php70w-intl
-    - php70w-soap
-    - php70w-xml
-    - php70w-xmlrpc
-    - php70w-pecl-apcu
-    - php70w-pecl-imagick
-    - php70w-fpm
+    - php72
+    - php72-php-fpm
+    - php72-php-mysqlnd
+    - php72-php-opcache
+    - php72-php-xml
+    - php72-php-xmlrpc
+    - php72-php-gd
+    - php72-php-mbstring
+    - php72-php-json
   when:
-    - php_version == 70
+    - php_version == 72
   notify:
     - restart php-fpm
