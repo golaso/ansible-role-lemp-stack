@@ -13,8 +13,8 @@
     name: "{{ item }}"
     state: present
   with_items:
-    - httpd
-    - mod_ssl
+#    - httpd
+#    - mod_ssl
     - php72
     - php72-php-fpm
     - php72-php-mysqlnd
@@ -26,5 +26,13 @@
     - php72-php-json
   when:
     - php_version == 72
+  notify:
+    - restart php-fpm
+
+- name: change owner of /var/lib/php
+  file:
+    path: /var/lib/php
+    owner: root
+    group: nginx
   notify:
     - restart php-fpm
