@@ -4,18 +4,31 @@
     name: "{{ item }}"
     state: present
   with_items:
-    - php72-php-xmlrpc
     - epel-release
     - yum-utils
     - http://rpms.remirepo.net/enterprise/remi-release-7.rpm
 
-- name: Install PHP 7.2 and httpd
+- name: install 2
   yum:
     name: "{{ item }}"
     state: present
   with_items:
-#    - httpd
-#    - mod_ssl
+    - php72-php-xmlrpc
+
+- name: Add remi-php72
+  yum_repository:
+    name: remi-php72
+    description: Remi's PHP 7.2 RPM repository for Enterprise Linux $releasever - $basearch
+    mirrorlist: http://rpms.remirepo.net/enterprise/$releasever/php72/mirror
+    enabled: yes
+    gpgcheck: 1
+    gpgkey: http://rpms.remirepo.net/RPM-GPG-KEY-remi
+
+- name: remove bad php72 packages
+  yum:
+    name: "{{ item }}"
+    state: absent
+  with_items:
     - php72
     - php72-php-fpm
     - php72-php-xml
@@ -24,15 +37,39 @@
     - php72-php-gd
     - php72-php-mbstring
     - php72-php-json
+
+- name: Install PHP 7.2 and httpd
+  yum:
+    name: "{{ item }}"
+    state: present
+  with_items:
+#    - httpd
+#    - mod_ssl
+#    - php72
+#    - php72-php-fpm
+#    - php72-php-xml
+#    - php72-php-opcache
+#    - php72-php-mysqlnd
+#    - php72-php-gd
+#    - php72-php-mbstring
+#    - php72-php-json
+    - php
+    - php-fpm
+    - php-xml
+    - php-opcache
+    - php-mysqlnd
+    - php-gd
+    - php-mbstring
+    - php-json
   when:
     - php_version == 72
   notify:
     - restart php-fpm
 
-- name: change owner of /var/lib/php
-  file:
-    path: /var/lib/php
-    owner: root
-    group: nginx
-  notify:
-    - restart php-fpm
+#- name: change owner of /var/lib/php
+#  file:
+#    path: /var/lib/php
+#    owner: root
+#    group: nginx
+#  notify:
+#    - restart php-fpm
